@@ -3,6 +3,8 @@ from numpy import fft
 import numpy as np
 import cv2
 from skimage.color import rgb2gray
+from skimage.metrics import structural_similarity as ssim
+from skimage.metrics import mean_squared_error
 
 TITLE = "Filtragem no Domínio da Frequência"
 
@@ -50,9 +52,18 @@ mask_filter_block = x_meshgrid**2 + y_meshgrid**2 <= pad_center_end**2
 mask[mask_filter_block] = 0
 mask[mask_filter_allow] = 1
 image_fourier_masked = image_fourier.copy() * mask
+image_fourier_result = abs(fft.ifft2(image_fourier_masked))
+
 with col1:
     st.image(np.pad(255 * (mask), 1, "constant", constant_values=0), clamp=True)
     st.image(image_fourier_masked, clamp=True)
 
 with col2:
-    st.image(abs(fft.ifft2(image_fourier_masked)), clamp=True)
+    st.image(image_fourier_result, clamp=True)
+
+st.markdown("### Métricas")
+image_original_target = rgb2gray(cv2.imread("data/folhas1.jpg"))
+result_metric_ssim = ssim(image_original_target, image_fourier_result, data_range=1.0)
+st.write(f"ssim: {result_metric_ssim}")
+result_metric_mse = mean_squared_error(image_original_target, image_fourier_result)
+st.write(f"mean_squared_error: {result_metric_mse}")
