@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "trabalho-final"
+version = "0.1.0"
+description = ""
+authors = ["Otavio Almeida <otavioalmeida650@gmail.com>"]
+readme = "README.md"
+packages = [{include = "trabalho_final"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+opencv-python = "^4.7.0.72"
+pillow = "^9.5.0"
+scikit-image = "^0.21.0"
+streamlit = "^1.23.1"
+numpy = "^1.25.0"
+pandas = "^2.0.2"
+polars = "^0.18.3"
+
+
+[tool.poetry.group.dev.dependencies]
+taskipy = "^1.11.0"
+black = "^23.3.0"
+ruff = "^0.0.272"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.taskipy.tasks]
+dashboard = "poetry run streamlit run trabalho_final/dashboard/Etapa1.py"
