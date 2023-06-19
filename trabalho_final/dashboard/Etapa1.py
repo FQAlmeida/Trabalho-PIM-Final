@@ -1,7 +1,7 @@
 import streamlit as st
 from numpy import fft
 import numpy as np
-from cv2 import imread
+import cv2
 from skimage.color import rgb2gray
 
 TITLE = "Filtragem no Domínio da Frequência"
@@ -10,7 +10,7 @@ st.set_page_config(TITLE, layout="wide")
 
 st.title(TITLE)
 
-image_original = rgb2gray(imread("data/folhas1_Reticulada.jpg"))
+image_original = rgb2gray(cv2.imread("data/folhas1_Reticulada.jpg"))
 
 st.markdown("### Imagem Original e Fourier")
 _, col1, col2, _ = st.columns([1, 3, 3, 1])
