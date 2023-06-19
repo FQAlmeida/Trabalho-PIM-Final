@@ -33,9 +33,9 @@ with col2:
     pad_center_start, pad_center_end = st.slider(
         "Padding Center",
         min_value=0,
-        # max_value=int(min(mask_width / 2, mask_height / 2)),
-        max_value=200,
-        value=(20, 60),
+        max_value=int(max(mask_width / 2, mask_height / 2)),
+        # max_value=200,
+        value=(35, 60),
         step=1,
     )
 
