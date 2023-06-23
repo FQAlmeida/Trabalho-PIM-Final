@@ -1,1 +1,7 @@
 libgl1
+ffmpeg
+gstreamer1.0-plugins-bad
+libavcodec-extra 
+gstreamer1.0-plugins-ugly 
+gstreamer1.0-libav
+ubuntu-restricted-extras

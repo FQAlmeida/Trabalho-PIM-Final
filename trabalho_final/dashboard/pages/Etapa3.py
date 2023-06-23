@@ -57,7 +57,7 @@ def split_video_frames(
         frame: np.ndarray = frame
         yield frame
         counter += 1
-        if counter >= 90:  # limite temporarario pra testar 3s
+        if counter >= 270:  # limite temporarario pra testar 3s
             break
     cap.release()
     # return frames
@@ -70,13 +70,17 @@ def create_video_from_frames(
 ):
     first_frame = next(frames)
     height, width = first_frame.shape
-    fourcc = cv2.VideoWriter_fourcc("M", "P", "4", "V")
-    out = cv2.VideoWriter(output_url, fourcc, fps, (width, height))
+    fourcc = cv2.VideoWriter_fourcc(*"H264")
+    out = cv2.VideoWriter(output_url, fourcc, fps, (width, height), isColor=False)
     out.write(first_frame)
+    progress = st.progress(0, "Doing")
+    done = 1.0
     for frame in frames:
         out.write(frame)
+        done += 1
+        progress.progress(done / 270.0, "Doing")
     out.release()
-    st.write("done")
+    st.write(f"done {done}")
 
 
 video_url = "data/videoX.mp4"
@@ -99,7 +103,9 @@ modified_frames: List[np.ndarray] = []
 def transform_frame(frame: np.ndarray):
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     result_frame = match_template(template, frame, method)
+    print(result_frame.dtype, frame.dtype)
     # print(result_frame)
+    # result_frame = frame
     return result_frame
 
 
@@ -107,7 +113,7 @@ def transform_frame(frame: np.ndarray):
 # st.image(result_frame)
 # modified_frames.append(result_frame)
 
-output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
+output_url = "data/video_saida.webm"  # Substitua pelo caminho de saída desejado
 create_video_from_frames(iter(map(transform_frame, frames)), output_url)
 # st.write(len(modified_frames))
 # del modified_frames[:]
