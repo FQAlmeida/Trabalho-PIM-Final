@@ -3,6 +3,10 @@ from typing import Generator, Iterator, List, Union
 import cv2
 import numpy as np
 import streamlit as st
+import ffmpy
+from multiprocessing.pool import ThreadPool
+
+qtd_frames = 30.0 * 23
 
 
 def match_template(template: np.ndarray, image: np.ndarray, method_idx: int):
@@ -35,7 +39,7 @@ def match_template(template: np.ndarray, image: np.ndarray, method_idx: int):
         top_left = max_loc
 
     bottom_right = (top_left[0] + w, top_left[1] + h)
-    cv2.rectangle(img, (*top_left, *bottom_right), 255, 2)
+    cv2.rectangle(img, top_left, bottom_right, 255, 2) # type: ignore
 
     return img
 
@@ -58,7 +62,7 @@ def split_video_frames(
         frame: np.ndarray = frame
         yield frame
         counter += 1
-        if counter >= 270:  # limite temporarario pra testar 3s
+        if counter >= qtd_frames:  # limite temporarario pra testar 3s
             break
     cap.release()
     # return frames
@@ -71,15 +75,16 @@ def create_video_from_frames(
 ):
     first_frame = next(frames)
     height, width = first_frame.shape[0:2]
-    fourcc = cv2.VideoWriter_fourcc(*"X264")
-    out = cv2.VideoWriter(output_url, fourcc, fps, (width, height), isColor=False)
+    fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+    # fourcc = 0x00000021
+    out = cv2.VideoWriter(output_url, fourcc, fps, (width, height), isColor=True)
     out.write(first_frame)
     progress = st.progress(0, "Doing")
     done = 1.0
     for frame in frames:
         out.write(frame)
         done += 1
-        progress.progress(done / 270.0, "Doing")
+        progress.progress(done / qtd_frames, "Doing")
     out.release()
     st.write(f"done {done}")
 
@@ -94,7 +99,7 @@ st.video(video_url)
 
 frames = split_video_frames(video_url)
 
-method = 0
+method = 5
 
 modified_frames: List[np.ndarray] = []
 
@@ -112,12 +117,23 @@ def transform_frame(frame: np.ndarray):
 # st.image(result_frame)
 # modified_frames.append(result_frame)
 
-output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
-create_video_from_frames(iter(map(transform_frame, frames)), output_url)
+
+with ThreadPool() as pool:
+    output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
+    create_video_from_frames(iter(pool.map(transform_frame, frames)), output_url)
+
+output_url_webm = "data/video_saida.webm"  # Substitua pelo caminho de saída desejado
+ff = ffmpy.FFmpeg(
+    global_options=("-y",),
+    inputs={output_url: None},
+    outputs={output_url_webm: None},
+)
+ff.run()
+
 # st.write(len(modified_frames))
 # del modified_frames[:]
 # del modified_frames
-st.video(output_url)
+st.video(output_url_webm, format="video/webm")
 
 # Exibir o vetor de frames modificado
 # for frame in modified_frames:
