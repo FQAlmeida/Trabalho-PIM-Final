@@ -2,4 +2,5 @@ libgl1
 ffmpeg
 libavcodec-extra 
 gstreamer1.0-libav
-
+libx264-dev
+x264
