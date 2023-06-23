@@ -70,7 +70,7 @@ def create_video_from_frames(
 ):
     first_frame = next(frames)
     height, width = first_frame.shape
-    fourcc = cv2.VideoWriter_fourcc('F','M','P','4')
+    fourcc = cv2.VideoWriter_fourcc("M", "P", "4", "V")
     out = cv2.VideoWriter(output_url, fourcc, fps, (width, height))
     out.write(first_frame)
     for frame in frames:
