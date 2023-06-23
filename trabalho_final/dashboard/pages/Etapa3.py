@@ -3,7 +3,6 @@ from typing import Generator, Iterator, List, Union
 import cv2
 import numpy as np
 import streamlit as st
-import ffmpy
 from multiprocessing.pool import ThreadPool
 
 qtd_frames = 30.0 * 23
@@ -39,7 +38,7 @@ def match_template(template: np.ndarray, image: np.ndarray, method_idx: int):
         top_left = max_loc
 
     bottom_right = (top_left[0] + w, top_left[1] + h)
-    cv2.rectangle(img, top_left, bottom_right, 255, 2) # type: ignore
+    cv2.rectangle(img, top_left, bottom_right, 255, 2)  # type: ignore
 
     return img
 
@@ -118,17 +117,17 @@ def transform_frame(frame: np.ndarray):
 # modified_frames.append(result_frame)
 
 
-# with ThreadPool() as pool:
-output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
-create_video_from_frames(iter(map(transform_frame, frames)), output_url)
+with ThreadPool() as pool:
+    output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
+    create_video_from_frames(iter(pool.map(transform_frame, frames)), output_url)
 
 output_url_webm = "data/video_saida.webm"  # Substitua pelo caminho de saída desejado
-ff = ffmpy.FFmpeg(
-    global_options=("-y",),
-    inputs={output_url: None},
-    outputs={output_url_webm: None},
-)
-ff.run()
+# ff = ffmpy.FFmpeg(
+#     global_options=("-y",),
+#     inputs={output_url: None},
+#     outputs={output_url_webm: None},
+# )
+# ff.run()
 
 # st.write(len(modified_frames))
 # del modified_frames[:]
