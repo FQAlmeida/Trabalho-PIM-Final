@@ -13,6 +13,4 @@ gstreamer0.10-plugins-ugly-multiverse
 icedtea6-plugin
 libavcodec-extra-52
 libmp4v2-0
-ttf-mscorefonts-installer
-unrar
 
