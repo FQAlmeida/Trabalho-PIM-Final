@@ -118,9 +118,9 @@ def transform_frame(frame: np.ndarray):
 # modified_frames.append(result_frame)
 
 
-with ThreadPool() as pool:
-    output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
-    create_video_from_frames(iter(pool.map(transform_frame, frames)), output_url)
+# with ThreadPool() as pool:
+output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
+create_video_from_frames(iter(map(transform_frame, frames)), output_url)
 
 output_url_webm = "data/video_saida.webm"  # Substitua pelo caminho de saída desejado
 ff = ffmpy.FFmpeg(
