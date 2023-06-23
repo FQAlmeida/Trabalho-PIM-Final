@@ -2,15 +2,4 @@ libgl1
 ffmpeg
 libavcodec-extra 
 gstreamer1.0-libav
-flashplugin-installer
-gstreamer0.10-ffmpeg
-gstreamer0.10-fluendo-mp3
-gstreamer0.10-pitfdll
-gstreamer0.10-plugins-bad
-gstreamer0.10-plugins-ugly
-gstreamer0.10-plugins-bad-multiverse
-gstreamer0.10-plugins-ugly-multiverse
-icedtea6-plugin
-libavcodec-extra-52
-libmp4v2-0
 
