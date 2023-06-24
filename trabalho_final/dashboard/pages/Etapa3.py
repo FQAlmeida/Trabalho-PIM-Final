@@ -3,7 +3,6 @@ from typing import Generator, Iterator, List, Union
 import cv2
 import numpy as np
 import streamlit as st
-from multiprocessing.pool import ThreadPool
 
 qtd_frames = 30.0 * 23
 
@@ -11,8 +10,6 @@ qtd_frames = 30.0 * 23
 def match_template(template: np.ndarray, image: np.ndarray, method_idx: int):
     img = image.copy()
     w, h = template.shape[0:2]
-
-    # define o método a ser utilizado
     methods = [
         cv2.TM_CCOEFF,
         cv2.TM_CCOEFF_NORMED,
@@ -30,7 +27,7 @@ def match_template(template: np.ndarray, image: np.ndarray, method_idx: int):
     image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     template_gray = cv2.cvtColor(template, cv2.COLOR_BGR2GRAY)
     res = cv2.matchTemplate(image_gray, template_gray, method)
-    min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(res)
+    _, _, min_loc, max_loc = cv2.minMaxLoc(res)
 
     if method in [cv2.TM_SQDIFF, cv2.TM_SQDIFF_NORMED]:
         top_left = min_loc
@@ -43,7 +40,6 @@ def match_template(template: np.ndarray, image: np.ndarray, method_idx: int):
     return img
 
 
-# desmonta o video em frames
 def split_video_frames(
     video_url: Union[PathLike, str]
 ) -> Generator[np.ndarray, None, None]:
@@ -56,18 +52,14 @@ def split_video_frames(
         ret, frame = cap.read()
         if not ret:
             break
-
-        # print(frame) #apagar
         frame: np.ndarray = frame
         yield frame
         counter += 1
-        if counter >= qtd_frames:  # limite temporarario pra testar 3s
+        if counter >= qtd_frames:  # limite temporarario pra testar
             break
     cap.release()
-    # return frames
 
 
-# monta o video dnv
 # @st.cache_data
 def create_video_from_frames(
     frames: Iterator[np.ndarray], output_url: Union[PathLike, str], fps=30.0
@@ -102,8 +94,6 @@ method = 5
 
 modified_frames: List[np.ndarray] = []
 
-# Aplicar o template matching em cada frame
-
 
 def transform_frame(frame: np.ndarray):
     # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
@@ -112,16 +102,10 @@ def transform_frame(frame: np.ndarray):
     return result_frame
 
 
-# for frame in frames:
-# st.image(result_frame)
-# modified_frames.append(result_frame)
+output_url = "data/video_saida.mp4"
+create_video_from_frames(map(transform_frame, frames), output_url)
 
-
-with ThreadPool() as pool:
-    output_url = "data/video_saida.mp4"  # Substitua pelo caminho de saída desejado
-    create_video_from_frames(pool.imap(transform_frame, frames), output_url)
-
-output_url_webm = "data/video_saida.webm"  # Substitua pelo caminho de saída desejado
+output_url_webm = "data/video_saida.webm"
 # ff = ffmpy.FFmpeg(
 #     global_options=("-y",),
 #     inputs={output_url: None},
@@ -131,12 +115,4 @@ output_url_webm = "data/video_saida.webm"  # Substitua pelo caminho de saída de
 
 # st.write(len(modified_frames))
 # del modified_frames[:]
-# del modified_frames
 st.video(output_url_webm, format="video/webm")
-
-# Exibir o vetor de frames modificado
-# for frame in modified_frames:
-#    cv2.imshow('Modified Frame', frame)
-#    cv2.waitKey(25)
-
-cv2.destroyAllWindows()
