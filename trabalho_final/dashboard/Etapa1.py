@@ -21,7 +21,7 @@ with col1:
 
 image_fourier = fft.fftshift(fft.fft2(image_original))
 with col2:
-    st.image(abs(image_fourier), clamp=True)
+    st.image(image_fourier, clamp=True)
 
 st.markdown("### Máscara")
 mask = np.ones(image_fourier.shape)
@@ -55,7 +55,7 @@ image_fourier_result = abs(fft.ifft2(image_fourier_masked))
 
 with col1:
     st.image(np.pad(255 * (mask), 1, "constant", constant_values=0), clamp=True)
-    st.image(abs(image_fourier_masked), clamp=True)
+    st.image(image_fourier_masked, clamp=True)
 
 with col2:
     st.image(image_fourier_result, clamp=True)
