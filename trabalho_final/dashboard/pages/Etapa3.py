@@ -103,7 +103,7 @@ def transform_frame(frame: np.ndarray):
 
 
 output_url = "data/video_saida.mp4"
-create_video_from_frames(map(transform_frame, frames), output_url)
+# create_video_from_frames(map(transform_frame, frames), output_url)
 
 output_url_webm = "data/video_saida.webm"
 # ff = ffmpy.FFmpeg(
