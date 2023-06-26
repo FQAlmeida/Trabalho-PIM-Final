@@ -25,9 +25,9 @@ w = np.array(
 
 b = np.array(
     [
-        [1, 0, 1],
-        [1, 0, 1],
-        [1, 1, 1],
+        [0, 1, 0],
+        [1, 1, 0],
+        [0, 1, 0],
     ]
 )
 
@@ -42,7 +42,7 @@ with col2:
     ax.imshow(b, cmap=plt.gray())
     st.pyplot(fig)
 
-x = morphology.erosion(w, b)
+x = morphology.binary_erosion(w, b)
 fig, ax = plt.subplots()
 ax.imshow(x, cmap=plt.gray())
 st.pyplot(fig)
@@ -51,7 +51,7 @@ st.pyplot(fig)
 inters = st.slider("Quantidade Iterações", 0, 10, 0, 1)
 for _ in range(inters):
     _, col1, col2, _ = st.columns([1, 3, 3, 1])
-    a = morphology.dilation(x, b)
+    a = morphology.binary_dilation(x, b)
     with col1:
         fig, ax = plt.subplots()
         ax.imshow(a, cmap=plt.gray())
