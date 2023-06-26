@@ -1,6 +1,7 @@
 from os import PathLike
-from typing import Generator, Iterator, List, Union
+from typing import Generator, Iterator, Union
 import cv2
+import ffmpy
 import numpy as np
 import streamlit as st
 
@@ -81,18 +82,24 @@ def create_video_from_frames(
 
 
 video_url = "data/videoX.mp4"
+template_path = "data/referencia_bom.png"
 
-template_path = "data/target.png"
+video_url_2 = "data/videoX_2.mp4"
+template_path_2 = "data/referencia_ruim.png"
 
 template = cv2.imread(template_path)
+template_2 = cv2.imread(template_path_2)
 
-st.video(video_url)
+col1, col2 = st.columns(2)
+with col1:
+    st.video(video_url)
+with col2:
+    st.video(video_url_2)
 
 frames = split_video_frames(video_url)
+frames_2 = split_video_frames(video_url_2)
 
 method = 5
-
-modified_frames: List[np.ndarray] = []
 
 
 def transform_frame(frame: np.ndarray):
@@ -103,16 +110,22 @@ def transform_frame(frame: np.ndarray):
 
 
 output_url = "data/video_saida.mp4"
-# create_video_from_frames(map(transform_frame, frames), output_url)
+output_url_2 = "data/video_saida_2.mp4"
+# create_video_from_frames(map(transform_frame, frames_2), output_url_2)
 
 output_url_webm = "data/video_saida.webm"
-# ff = ffmpy.FFmpeg(
-#     global_options=("-y",),
-#     inputs={output_url: None},
-#     outputs={output_url_webm: None},
-# )
-# ff.run()
+output_url_webm_2 = "data/video_saida_2.webm"
+ff = ffmpy.FFmpeg(
+    global_options=("-y",),
+    inputs={output_url_2: None},
+    outputs={output_url_webm_2: None},
+)
+ff.run()
 
 # st.write(len(modified_frames))
 # del modified_frames[:]
-st.video(output_url_webm, format="video/webm")
+col1, col2 = st.columns(2)
+with col1:
+    st.video(output_url_webm, format="video/webm")
+with col2:
+    st.video(output_url_webm_2, format="video/webm")

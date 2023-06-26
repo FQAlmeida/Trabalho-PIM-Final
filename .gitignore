@@ -226,3 +226,4 @@ pip-selfcheck.json
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode,python,venv,virtualenv,git
 # data/video_saida.webm
 data/video_saida.mp4
+data/video_saida_2.mp4
