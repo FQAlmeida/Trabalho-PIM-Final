@@ -1,7 +1,7 @@
 from os import PathLike
 from typing import Generator, Iterator, Union
 import cv2
-import ffmpy
+# import ffmpy
 import numpy as np
 import streamlit as st
 
@@ -115,12 +115,12 @@ output_url_2 = "data/video_saida_2.mp4"
 
 output_url_webm = "data/video_saida.webm"
 output_url_webm_2 = "data/video_saida_2.webm"
-ff = ffmpy.FFmpeg(
-    global_options=("-y",),
-    inputs={output_url_2: None},
-    outputs={output_url_webm_2: None},
-)
-ff.run()
+# ff = ffmpy.FFmpeg(
+#     global_options=("-y",),
+#     inputs={output_url_2: None},
+#     outputs={output_url_webm_2: None},
+# )
+# ff.run()
 
 # st.write(len(modified_frames))
 # del modified_frames[:]
